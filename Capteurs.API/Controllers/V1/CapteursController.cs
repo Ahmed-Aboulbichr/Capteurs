@@ -2,6 +2,7 @@
 using Capteurs.API.Models.DTOs;
 using Capteurs.API.Repositories;
 using Capteurs.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Capteurs.API.Controllers.V1;
@@ -11,6 +12,7 @@ namespace Capteurs.API.Controllers.V1;
 [ApiVersion("1.0")]
 [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(StatusCodes.Status403Forbidden)]
+[Authorize]
 public class CapteursController : ControllerBase
 {
     private readonly ICapteursService capteursService;
@@ -24,6 +26,7 @@ public class CapteursController : ControllerBase
 
     [HttpGet]
     [ResponseCache(Duration = 30)]
+    [Authorize(Roles ="admin")]
     public async Task<ActionResult<IEnumerable<CapteurDto>>> GetAllCapteursAsync()
     {
         var capteurs = await capteursService.GetAllAsync();

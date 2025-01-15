@@ -16,16 +16,19 @@ public class UserRepository : IUserRepository
 {
     private readonly MyDbContext myDbContext;
     private readonly UserManager<User> userManager;
+    private readonly RoleManager<IdentityRole> roleManager;
     private readonly IMapper mapper;
     private string secretKey;
 
     public UserRepository(MyDbContext myDbContext,
         UserManager<User> userManager,
+        RoleManager<IdentityRole> roleManager, 
         IMapper mapper,
         IConfiguration configuration)
     {
         this.myDbContext = myDbContext;
         this.userManager = userManager;
+        this.roleManager = roleManager;
         this.mapper = mapper;
         secretKey = configuration.GetValue<string>("ApiSettings:Secret")!;
     }
@@ -87,6 +90,10 @@ public class UserRepository : IUserRepository
             var result = await userManager.CreateAsync(user, register.Password);
             if(result.Succeeded)
             {
+                if (!roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
+                {
+                    await roleManager.CreateAsync(new IdentityRole("admin"));
+                }
                 await userManager.AddToRoleAsync(user, "admin");
                 var userToReturn = myDbContext.Users.FirstOrDefault(u => u.UserName == register.UserName);
                 return mapper.Map<UserDto>(userToReturn);
