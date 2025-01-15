@@ -27,7 +27,13 @@ Capteurs API is a robust RESTful API built with .NET 7 that supports CRUD operat
 ## Screenshots
 
 ### API Documentation
-![Swagger Documentation](images/swagger-docs.png)
+![Swagger Documentation](images/swagger.PNG)
 
-### Postman Example
-![Postman Example](images/postman-example.png)
+### Code Structure
+![Code Structure](images/structure.PNG)
+
+### Postgres Db
+![Postgres Db](images/postgres.PNG)
+
+### Test
+![Test](images/test.PNG)
