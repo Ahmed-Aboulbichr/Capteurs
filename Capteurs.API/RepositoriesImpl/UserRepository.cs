@@ -85,22 +85,21 @@ public class UserRepository : IUserRepository
             NormalizedEmail = register.UserName.ToUpper(),
             Name = register.Name
         };
-        try
+        try { 
+        var result = await userManager.CreateAsync(user, register.Password);
+        if(result.Succeeded)
         {
-            var result = await userManager.CreateAsync(user, register.Password);
-            if(result.Succeeded)
+            if (!roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
             {
-                if (!roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
-                {
-                    await roleManager.CreateAsync(new IdentityRole("admin"));
-                }
-                await userManager.AddToRoleAsync(user, "admin");
-                var userToReturn = myDbContext.Users.FirstOrDefault(u => u.UserName == register.UserName);
-                return mapper.Map<UserDto>(userToReturn);
+                await roleManager.CreateAsync(new IdentityRole("admin"));
             }
-        }catch(Exception ex)
+            await userManager.AddToRoleAsync(user, "admin");
+            var userToReturn = myDbContext.Users.FirstOrDefault(u => u.UserName == register.UserName);
+            return mapper.Map<UserDto>(userToReturn);
+        }
+        }catch(Exception)
         {
-
+            throw;
         }
         return new();
     }

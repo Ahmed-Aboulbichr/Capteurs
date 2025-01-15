@@ -26,7 +26,7 @@ public class ErrorHandlingMiddleware : IMiddleware
         catch (Exception ex)
         {
             logger.LogError(ex, ex.Message);
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync(ex.Message);
             await context.Response.WriteAsync("Something went wrong");
         }
     }

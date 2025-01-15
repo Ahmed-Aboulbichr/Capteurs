@@ -15,7 +15,7 @@ public class MyDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(builder);  
     }
-    public DbSet<User> MyUsers { get; set; }
+    public virtual DbSet<User> MyUsers { get; set; }
 
-	public DbSet<Capteur> Capteurs { get; set; }
+	public virtual DbSet<Capteur> Capteurs { get; set; }
 }
